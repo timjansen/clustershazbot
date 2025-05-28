@@ -66,6 +66,9 @@ class ClustershazbotEngine {
             this.serverListManager.setThisServerOffline();
         }
     }
+    getServerList(includeOffline = false) {
+        return this.serverListManager.getServerList(includeOffline);
+    }
     async bootstrapFromMasterList() {
         const masterList = await this.httpClient.downloadMasterList(this.config.SHAZBOT_MASTER_LIST);
         if (masterList) {
@@ -194,4 +197,10 @@ export async function shazbotControlRequest(authorizationHeader, message) {
         throw new Error('Clustershazbot engine not started');
     }
     return engineInstance.handleControlRequest(authorizationHeader, message);
+}
+export function shazbotGetServerList(includeOffline = false) {
+    if (!engineInstance) {
+        throw new Error('Clustershazbot engine not started');
+    }
+    return engineInstance.getServerList(includeOffline);
 }

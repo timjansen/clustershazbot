@@ -94,6 +94,8 @@ app.listen(3000, () => {
 });
 ```
 
+For more comprehensive examples including error handling, NestJS integration, Docker setup, and production best practices, see [EXAMPLES.md](./EXAMPLES.md).
+
 ### Nest.js Example
 
 ```typescript

@@ -4,7 +4,8 @@ export {
     shazbotShutDown,
     shazbotGossipRequest,
     shazbotListRequest,
-    shazbotControlRequest
+    shazbotControlRequest,
+    shazbotGetServerList
 } from './clustershazbot.js';
 
 export {

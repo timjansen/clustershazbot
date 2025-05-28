@@ -1,5 +1,5 @@
-import { GossipMessage, ControlMessage, ServerList, GossipServer } from './types.js';
-import { Config, loadConfig } from './config.js';
+import { GossipMessage, ControlMessage, ServerList } from './types.js';
+import { Config, loadConfig } from './config.js'
 import { HttpClient } from './http-client.js';
 import { ServerListManager } from './server-list-manager.js';
 
@@ -92,6 +92,10 @@ class ClustershazbotEngine {
         } else {
             this.serverListManager.setThisServerOffline();
         }
+    }
+
+    getServerList(includeOffline: boolean = false): ServerList {
+        return this.serverListManager.getServerList(includeOffline);
     }
 
     private async bootstrapFromMasterList(): Promise<void> {
@@ -237,6 +241,7 @@ export async function shazbotStart(): Promise<void> {
 export async function shazbotShutDown(): Promise<void> {
     if (engineInstance) {
         await engineInstance.shutdown();
+        engineInstance = null;
     }
 }
 
@@ -259,4 +264,11 @@ export async function shazbotControlRequest(authorizationHeader: string, message
         throw new Error('Clustershazbot engine not started');
     }
     return engineInstance.handleControlRequest(authorizationHeader, message);
+}
+
+export function shazbotGetServerList(includeOffline: boolean = false): ServerList {
+    if (!engineInstance) {
+        throw new Error('Clustershazbot engine not started');
+    }
+    return engineInstance.getServerList(includeOffline);
 }
