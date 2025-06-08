@@ -231,11 +231,29 @@ class ClustershazbotEngine {
 // Global instance
 let engineInstance: ClustershazbotEngine | null = null;
 
+// happy-server extension registration
+function registerHappyServerExtension(): boolean {
+    // Only register if not already registered
+    if (typeof globalThis == 'undefined' || typeof (globalThis as any).happyServerExtension != 'object')
+        return false;
+    (globalThis as any).happyServerExtension['clustershazbot'] = () => {
+        try {
+            const cluster = engineInstance ? engineInstance.getServerList(true) : undefined;
+            return { status: 'ok', cluster };
+        } catch (e) {
+            return { status: 'error', error: (e as Error).message };
+        }
+    };
+    return true;
+}
+
+if (!registerHappyServerExtension())
+    setTimeout(registerHappyServerExtension, 3000);
+
 export async function shazbotStart(): Promise<void> {
-    if (!engineInstance) {
-        engineInstance = new ClustershazbotEngine();
-    }
+    if (!engineInstance) engineInstance = new ClustershazbotEngine();
     await engineInstance.start();
+    registerHappyServerExtension();
 }
 
 export async function shazbotShutDown(): Promise<void> {

@@ -2,6 +2,8 @@
 
 A TypeScript library for gossip-style coordination of backend service clusters, such as those written with Express or Nest.js.
 
+This allows happy-server's `/happy` endpoint to include live cluster state under the `extensions.clustershazbot` property.
+
 ## Installation
 
 ```bash
@@ -205,6 +207,33 @@ interface ControlMessage {
 3. **Master List Bootstrap**: New servers bootstrap by downloading a master server list
 4. **Monitor Servers**: Special servers marked as monitors are preferred for gossip exchanges
 5. **Automatic Cleanup**: Offline servers older than 24 hours are automatically removed
+
+
+## Happy-Server Integration
+
+Clustershazbot automatically integrates with [happy-server](https://github.com/timjansen/happy-server) if it is present in the global environment, exposing the current cluster state for health and monitoring endpoints.
+The extension returns an object of the form:
+
+```json
+{
+  "status": "ok",
+  "cluster": {
+    "online": [ ... ],
+    "offline": [ ... ]
+  }
+}
+```
+
+- If the engine is not started or an error occurs, it returns:
+
+```json
+{
+  "status": "error",
+  "error": "<error message>"
+}
+```
+
+
 
 ## License
 
