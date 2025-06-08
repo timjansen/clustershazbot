@@ -61,14 +61,23 @@ export class ServerListManager {
             this.onlineServers.delete(baseUrl);
         }
     }
-
     setThisServerOffline(): void {
+        // Do nothing if already offline
+        if (!this.onlineServers.has(this.thisServer.baseUrl)) {
+            return;
+        }
+        
         this.thisServer.lastUpdate = Date.now();
         this.offlineServers.set(this.thisServer.baseUrl, this.thisServer);
         this.onlineServers.delete(this.thisServer.baseUrl);
     }
 
     setThisServerOnline(): void {
+        // Do nothing if already online
+        if (this.onlineServers.has(this.thisServer.baseUrl)) {
+            return;
+        }
+        
         this.thisServer.lastUpdate = Date.now();
         this.onlineServers.set(this.thisServer.baseUrl, this.thisServer);
         this.offlineServers.delete(this.thisServer.baseUrl);
